@@ -6,8 +6,7 @@ import Path from "@antv/g-canvas/lib/shape/path";
 import { vec2 } from "@antv/matrix-util";
 import each from '@antv/util/lib/each'
 import Global from '@g6/global'
-import { INode } from "@g6/interface/item";
-import { EdgeConfig, IBBox, IPoint, IShapeBase, TreeGraphData, LabelStyle } from '@g6/types';
+import { EdgeConfig, IBBox, IPoint, IShapeBase, LabelStyle, TreeGraphData } from '@g6/types';
 import { applyMatrix } from "./math";
 
 const PI: number =  Math.PI
@@ -210,7 +209,7 @@ export const getLoopCfgs = (cfg: EdgeConfig): EdgeConfig => {
  */
 export const getLabelPosition = (pathShape: Path, percent: number, refX: number, refY: number, rotate: boolean): LabelStyle => {
   const TAN_OFFSET = 0.0001;
-  let vector: number[][] = [];
+  const vector: number[][] = [];
   const point: IPoint = pathShape.getPoint(percent);
   if (point === null) {
     return {
