@@ -7,7 +7,7 @@ import { IShape } from '@antv/g-canvas/lib/interfaces'
 import each from '@antv/util/lib/each'
 import { ShapeOptions } from '@g6/interface/shape'
 import { ILabelConfig } from '@g6/interface/shape'
-import { IPoint, Item, LabelStyle, ModelConfig, ShapeStyle, ModelStyle } from '@g6/types'
+import { IPoint, Item, LabelStyle, ModelConfig, ModelStyle, ShapeStyle } from '@g6/types'
 import { cloneDeep, get, merge } from 'lodash'
 import Global from '../global'
 
@@ -97,18 +97,24 @@ export const shapeBase: ShapeOptions = {
   update(cfg: ModelConfig, item: Item) {
     const group = item.getContainer()
     const shapeClassName = this.itemType + CLS_SHAPE_SUFFIX
-    const shape = group.find(element => { return element.get('className') === shapeClassName})
+    const shape = group.find(element => element.get('className') === shapeClassName)
     const shapeStyle = this.getShapeStyle(cfg)
-    shape && shape.attr(shapeStyle)
+   
+    if(shape) {
+      shape.attr(shapeStyle)
+    }
+
     const labelClassName = this.itemType + CLS_LABEL_SUFFIX
-    const label = group.find(element => { return element.get('className') === labelClassName})
+    const label = group.find(element => element.get('className') === labelClassName)
 
 		// 此时需要考虑之前是否绘制了 label 的场景存在三种情况
 		// 1. 更新时不需要 label，但是原先存在 label，此时需要删除
 		// 2. 更新时需要 label, 但是原先不存在，创建节点
 		// 3. 如果两者都存在，更新
     if (!cfg.label) {
-      label && label.remove()
+      if(label) {
+        label.remove()
+      }
     } else {
       if (!label) {
         const newLabel = this.drawLabel(cfg, group)
@@ -173,7 +179,7 @@ export const shapeBase: ShapeOptions = {
 
     const { style: defaultStyle } = this.options
 
-    let currentStateStyle: ModelStyle = defaultStyle
+    const currentStateStyle: ModelStyle = defaultStyle
     
     if (value) {
       return merge({}, currentStateStyle, model.style)
